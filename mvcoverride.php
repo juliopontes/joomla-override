@@ -4,10 +4,19 @@ defined('_JEXEC') or die;
 
 jimport('joomla.plugin.plugin');
 
+/**
+ * PlgSystemMVCOverride class.
+ * 
+ * @extends JPlugin
+ */
 class PlgSystemMVCOverride extends JPlugin
 {
+	
 	/**
-	 * Override MVC
+	 * onAfterRoute function.
+	 * 
+	 * @access public
+	 * @return void
 	 */
 	public function onAfterRoute()
 	{
@@ -53,7 +62,7 @@ class PlgSystemMVCOverride extends JPlugin
 					if ($this->params->get('extendDefault',0))
 					{
 						$bufferFile = JFile::read(JPATH_BASE.'/components/'.$componentFile);
-						//detect if override file use some constants
+						//detect if source file use some constants
 						preg_match_all('/JPATH_COMPONENT(_SITE|_ADMINISTRATOR)|JPATH_COMPONENT/i', $bufferFile, $definesSource);
 						
 						$bufferOverrideFile = JFile::read($filePath);
@@ -76,6 +85,7 @@ class PlgSystemMVCOverride extends JPlugin
 						}
 						else
 						{
+							//replace original class name by default
 							$bufferContent = str_replace($originalClass,$replaceClass,$bufferFile);
 							
 							//replace JPATH_COMPONENT constants if found, because we are loading before define these constants
@@ -104,7 +114,14 @@ class PlgSystemMVCOverride extends JPlugin
 			}
 		}
 	}
-
+	
+	/**
+	 * loadComponentFiles function.
+	 * 
+	 * @access private
+	 * @param mixed $option
+	 * @return void
+	 */
 	private function loadComponentFiles($option)
 	{
 		$JPATH_COMPONENT = JPATH_BASE.'/components/'.$option;

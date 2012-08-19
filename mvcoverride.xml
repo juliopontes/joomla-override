@@ -7,10 +7,14 @@
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<authorEmail>juliopfneto@gmail.com</authorEmail>
 	<authorUrl>http://twitter.com/juliopontes</authorUrl>
-	<version>2.5.3</version>
-	<description>Provides a component MVC override.</description>
+	<version>2.5.5</version>
+	<description>
+		Provides a component MVC override.
+	</description>
 	<files>
 		<filename plugin="mvcoverride">mvcoverride.php</filename>
+		<folder>core</folder>
+		<folder>helper</folder>
 	</files>
 	<config>
 		<fields name="params">

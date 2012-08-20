@@ -122,6 +122,10 @@ class MVCOverrideHelperComponent
 			{
 				$exclude[] = 'menutypes.php';
 			}
+			if ($option == 'com_modules' && JFactory::getApplication()->isAdmin())
+			{
+				$exclude[] = 'module.php';
+			}
 			$models = JFolder::files($JPATH_COMPONENT.'/models', '.php', true, true, $exclude);
 			
 			$files = array_merge($files, $models);
@@ -150,6 +154,16 @@ class MVCOverrideHelperComponent
 			
 			require_once dirname(dirname(__FILE__)).'/core/model/menutypes.php';
 		}
+		if ($option == 'com_modules' && JFactory::getApplication()->isAdmin())
+		{
+			//override MenusModelMenutypes class
+			$modelContent = JFile::read($JPATH_COMPONENT.'/models/module.php');
+			$modelContent = str_replace('ModulesModelModule', 'ModulesModelModuleDefault', $modelContent);
+			// Finally we can load the base class
+			eval('?>'.$modelContent.PHP_EOL.'?>');
+			
+			require_once dirname(dirname(__FILE__)).'/core/model/module.php';
+		}
 		
 		$return = array();
 		//cleaning files
@@ -164,7 +178,7 @@ class MVCOverrideHelperComponent
 	}
 
 	/**
-	 * Register override ptahs based on codepools
+	 * Register override paths based on codepools
 	 * 
 	 * @param string $option
 	 */

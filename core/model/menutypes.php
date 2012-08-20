@@ -66,14 +66,11 @@ class MenusModelMenutypes extends MenusModelMenutypesDefault
 			$views = JFolder::folders($basePath);
 		}
 		
-		foreach (MVCOverrideHelperOverride::addCodePath() as $codePool)
+		$siteCodePath = JPATH_SITE.'/code/'.$component.'/views';
+		if (JFolder::exists($siteCodePath))
 		{
-			$viewPath = JPath::clean($codePool.'/'.$component.'/views');
-			if (JFolder::exists($viewPath))
-			{
-				$paths[] = $viewPath;
-				$views = array_merge($views, JFolder::folders($viewPath));
-			}
+			$paths[] = $siteCodePath;
+			$views = array_merge($views, JFolder::folders($siteCodePath));
 		}
 		
 		if (is_null($views))
@@ -166,20 +163,16 @@ class MenusModelMenutypes extends MenusModelMenutypesDefault
 		// Get the views for this component.
 		$paths = array(
 			JPATH_SITE.'/components/'.$component.'/views/'.$view.'/tmpl',
+			JPATH_SITE.'/code/'.$component.'/views/'.$view.'/tmpl',
 		);
 		
 		
 		if (JFolder::exists($paths[0]))
 			$layouts = JFolder::files($paths[0], '.xml$', false, true);
 		
-		foreach (MVCOverrideHelperOverride::addCodePath() as $codePool)
+		if (JFolder::exists($paths[1]))
 		{
-			$layoutPath = JPath::clean($codePool.'/'.$component.'/views/'.$view.'/tmpl');
-			if (JFolder::exists($layoutPath))
-			{
-				$paths[] = $layoutPath;
-				$layouts = array_merge($layouts, JFolder::files($layoutPath, '.xml$', false, true));
-			}
+			$layouts = array_merge($layouts, JFolder::files($paths[1], '.xml$', false, true));
 		}
 		
 		if (is_null($layouts) || empty($layouts))

@@ -21,6 +21,36 @@ class MVCOverrideHelperOverride
 	{
 		$plugin_path = dirname(dirname(__FILE__));
 		
+		//exception for implement new features
+		$exceptionDatas = array(
+			array(
+				'option' => 'com_menus',
+				'application' => 'administrator',
+				'data' => array(
+					'models' => array(
+						array(
+							'class' => 'MenusModelMenutypes',
+							'source' => '/models/menutypes.php',
+							'destiny' => '/model/menutypes.php',
+						)
+					)
+				)
+			),
+			array(
+				'option' => 'com_modules',
+				'application' => 'administrator',
+				'data' => array(
+					'models' => array(
+						array(
+							'class' => 'ModulesModelModule',
+							'source' => '/models/module.php',
+							'destiny' => '/model/module.php',
+						)
+					)
+				)
+			)
+		);
+		
 		if (JVERSION > 2.5)
 		{
 			$overrideClasses = array(
@@ -82,6 +112,11 @@ class MVCOverrideHelperOverride
 		foreach ($overrideClasses as $overrideClass)
 		{
 			self::overrideClass($overrideClass['source_file'], $overrideClass['class_name'], $overrideClass['jimport'], $overrideClass['override_file']);
+		}
+		
+		foreach ($exceptionDatas as $exceptionData)
+		{
+			MVCOverrideHelperComponent::addExceptionOverride($exceptionData['option'], $exceptionData['application'], $exceptionData['data']);
 		}
 	}
 

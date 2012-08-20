@@ -6,6 +6,8 @@
  */
 class MVCOverrideHelperComponent
 {
+	static private $_exception = array();
+	
 	/**
 	 * Preload component files to override
 	 * 
@@ -110,7 +112,15 @@ class MVCOverrideHelperComponent
 		//check if controllers folder exists
 		if (JFolder::exists($JPATH_COMPONENT.'/controllers'))
 		{
-			$controllers = JFolder::files($JPATH_COMPONENT.'/controllers', '.php', false, true);
+			$exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
+			if (self::hasException($option,'views'))
+			{
+				foreach (self::$_exception[$option][JFactory::getApplication()->getName()]['controllers'] as $controllerData)
+				{
+					$exclude[] = JFile::stripext($controllerData['source']);
+				}
+			}
+			$controllers = JFolder::files($JPATH_COMPONENT.'/controllers', '.php', false, true, $exclude);
 			$files = array_merge($files, $controllers);
 		}
 		
@@ -118,13 +128,12 @@ class MVCOverrideHelperComponent
 		if (JFolder::exists($JPATH_COMPONENT.'/models'))
 		{
 			$exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
-			if ($option == 'com_menus' && JFactory::getApplication()->isAdmin())
+			if (self::hasException($option,'views'))
 			{
-				$exclude[] = 'menutypes.php';
-			}
-			if ($option == 'com_modules' && JFactory::getApplication()->isAdmin())
-			{
-				$exclude[] = 'module.php';
+				foreach (self::$_exception[$option][JFactory::getApplication()->getName()]['models'] as $modelData)
+				{
+					$exclude[] = JFile::stripext($modelData['source']);
+				}
 			}
 			$models = JFolder::files($JPATH_COMPONENT.'/models', '.php', true, true, $exclude);
 			
@@ -138,31 +147,34 @@ class MVCOverrideHelperComponent
 			$views = JFolder::folders($JPATH_COMPONENT.'/views');
 			foreach ($views as $view)
 			{
+				$exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
+				if (self::hasException($option,'views'))
+				{
+					foreach (self::$_exception[$option][JFactory::getApplication()->getName()]['views'] as $viewData)
+					{
+						$exclude[] = JFile::stripext($viewData['source']);
+					}
+				}
 				//get view formats files
-				$viewsFiles = JFolder::files($JPATH_COMPONENT.'/views/'.$view, '.php', false, true);
+				$viewsFiles = JFolder::files($JPATH_COMPONENT.'/views/'.$view, '.php', false, true, $exclude);
 				$files = array_merge($files, $viewsFiles);
 			}
 		}
 		
-		if ($option == 'com_menus' && JFactory::getApplication()->isAdmin())
+		if (self::hasException($option))
 		{
-			//override MenusModelMenutypes class
-			$modelContent = JFile::read($JPATH_COMPONENT.'/models/menutypes.php');
-			$modelContent = str_replace('MenusModelMenutypes', 'MenusModelMenutypesDefault', $modelContent);
-			// Finally we can load the base class
-			eval('?>'.$modelContent.PHP_EOL.'?>');
-			
-			require_once dirname(dirname(__FILE__)).'/core/model/menutypes.php';
-		}
-		if ($option == 'com_modules' && JFactory::getApplication()->isAdmin())
-		{
-			//override MenusModelMenutypes class
-			$modelContent = JFile::read($JPATH_COMPONENT.'/models/module.php');
-			$modelContent = str_replace('ModulesModelModule', 'ModulesModelModuleDefault', $modelContent);
-			// Finally we can load the base class
-			eval('?>'.$modelContent.PHP_EOL.'?>');
-			
-			require_once dirname(dirname(__FILE__)).'/core/model/module.php';
+			foreach (self::$_exception[$option][JFactory::getApplication()->getName()] as $type => $exceptionDatas)
+			{
+				foreach ($exceptionDatas as $exceptionData)
+				{
+					$modelContent = JFile::read($JPATH_COMPONENT.$exceptionData['source']);
+					$modelContent = str_replace($exceptionData['class'], $exceptionData['class'].'Default', $modelContent);
+					// Finally we can load the base class
+					eval('?>'.$modelContent.PHP_EOL.'?>');
+					
+					require_once dirname(__DIR__).'/core/'.$exceptionData['destiny'];
+				}
+			}
 		}
 		
 		$return = array();
@@ -201,6 +213,21 @@ class MVCOverrideHelperComponent
 			JModelForm::addComponentFormPath($codePool.'/'.$option.'/models/forms');
 			JModelForm::addComponentFieldPath($codePool.'/'.$option.'/models/fields');
 		}
+	}
+
+	static private function hasException($option,$key=null)
+	{
+		if ( (is_null($key) && !isset(self::$_exception[$option][JFactory::getApplication()->getName()]) ) || (!empty($key) && !isset(self::$_exception[$option][JFactory::getApplication()->getName()][$key]))  )
+		{
+			return false;
+		}
+		
+		return true;
+	}
+
+	static public function addExceptionOverride($option, $application, array $data)
+	{
+		self::$_exception[$option][$application] = $data;
 	}
 	
 	/**

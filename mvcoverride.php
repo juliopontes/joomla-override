@@ -22,10 +22,10 @@ class PlgSystemMVCOverride extends JPlugin
 		
 		//code pools
 		$includePath = array();
-		//template code path
-		$includePath[] = JPATH_THEMES.'/'.$template.'/code';
 		//base extensions path
 		$includePath[] = JPATH_BASE.'/code';
+		//template code path
+		$includePath[] = JPATH_THEMES.'/'.$template.'/code';
 		
 		MVCOverrideHelperOverride::addCodePath($includePath);
 	}

@@ -9,7 +9,7 @@
 	<authorUrl>http://twitter.com/juliopontes</authorUrl>
 	<version>2.5.5</version>
 	<description>
-		Provides a component MVC override.
+		Provides a component MVC override. If you wish to support donate U$ 0,99 to project. https://t.co/wVCmFpKB
 	</description>
 	<files>
 		<filename plugin="mvcoverride">mvcoverride.php</filename>

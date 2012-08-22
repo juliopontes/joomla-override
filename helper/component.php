@@ -1,29 +1,29 @@
 <?php
 /**
  * Component Helper Manager
- * 
+ *
  * @author juliopontes <juliopfneto@gmail.com>
  */
 class MVCOverrideHelperComponent
 {
 	static private $_exception = array();
-	
+
 	/**
 	 * Preload component files to override
-	 * 
+	 *
 	 * We read original source file and if are enabled to extend default classes we need to change defined vars because they dont exists at this step.
-	 * 
+	 *
 	 * @param string $option
 	 * @param JRegistry $params
 	 */
 	static public function preload($option, $params)
 	{
 		if (count(MVCOverrideHelperOverride::addCodePath()) == 0) return;
-		
+
 		//get files that can be overrided
 		$componentOverrideFiles = self::loadComponentFiles($option);
 		self::registerPaths($option);
-		
+
 		//loading override files
 		if( !empty($componentOverrideFiles) )
 		{
@@ -31,27 +31,35 @@ class MVCOverrideHelperComponent
 			{
 				if($filePath = JPath::find(MVCOverrideHelperOverride::addCodePath(),$componentFile))
 				{
-					//include the original code and replace class name add a Default on 
+					//include the original code and replace class name add a Default on
 					if ($params->get('extendDefault',0))
 					{
 						$bufferFile = JFile::read(JPATH_BASE.'/components/'.$componentFile);
 						//detect if source file use some constants
 						preg_match_all('/JPATH_COMPONENT(_SITE|_ADMINISTRATOR)|JPATH_COMPONENT/i', $bufferFile, $definesSource);
-						
+
 						$bufferOverrideFile = JFile::read($filePath);
 						//detect if override file use some constants
 						preg_match_all('/JPATH_COMPONENT(_SITE|_ADMINISTRATOR)|JPATH_COMPONENT/i', $bufferOverrideFile, $definesSourceOverride);
-						
+
 						// Append "Default" to the class name (ex. ClassNameDefault). We insert the new class name into the original regex match to get
-						$rx = '/class *[a-z0-0]* *(extends|{)/i';
-						
-						preg_match($rx, $bufferFile, $classes);
-						
-						$parts = explode(' ',$classes[0]);
-						
-						$originalClass = $parts[1];
+						$originalClass = null;
+						$tokens = token_get_all($bufferFile);
+					    foreach( $tokens as $key => $token)
+					    {
+					        if(is_array($token))
+					        {
+					        	// Find the class declaration
+					        	if (token_name($token[0]) == 'T_CLASS')
+			        			{
+			        				// Class name should be in the key+2 position
+									$originalClass = $tokens[$key+2][1];
+									break;
+			        			}
+					        }
+					    }
 						$replaceClass = $originalClass.'Default';
-						
+
 						if (count($definesSourceOverride[0]))
 						{
 							JError::raiseError('Plugin MVC Override','Your override file use constants, please replace code constants<br />JPATH_COMPONENT -> JPATH_SOURCE_COMPONENT,<br />JPATH_COMPONENT_SITE -> JPATH_SOURCE_COMPONENT_SITE and<br />JPATH_COMPONENT_ADMINISTRATOR -> JPATH_SOURCE_COMPONENT_ADMINISTRATOR');
@@ -60,22 +68,22 @@ class MVCOverrideHelperComponent
 						{
 							//replace original class name by default
 							$bufferContent = str_replace($originalClass,$replaceClass,$bufferFile);
-							
+
 							//replace JPATH_COMPONENT constants if found, because we are loading before define these constants
 							if (count($definesSource[0]))
 							{
 								$bufferContent = preg_replace(array('/JPATH_COMPONENT/','/JPATH_COMPONENT_SITE/','/JPATH_COMPONENT_ADMINISTRATOR/'),array('JPATH_SOURCE_COMPONENT','JPATH_SOURCE_COMPONENT_SITE','JPATH_SOURCE_COMPONENT_ADMINISTRATOR'),$bufferContent);
 							}
-							
+
 							// Change private methods to protected methods
 							if ($params->get('changePrivate',0))
 							{
 								$bufferContent = preg_replace('/private *function/i', 'protected function', $bufferContent);
 							}
-							
+
 							// Finally we can load the base class
 							eval('?>'.$bufferContent.PHP_EOL.'?>');
-							
+
 							require_once $filePath;
 						}
 					}
@@ -90,10 +98,10 @@ class MVCOverrideHelperComponent
 
 	/**
 	 * Load component files that can be overrided
-	 * 
+	 *
 	 * Controllers, Models and Views
 	 * We have an exeption for MenuModelMenutypes because we've add a new feature to read our codepools and override views and create new views.
-	 * 
+	 *
 	 * @access private
 	 * @param mixed $option
 	 * @return void
@@ -102,13 +110,13 @@ class MVCOverrideHelperComponent
 	{
 		$JPATH_COMPONENT = JPATH_BASE.'/components/'.$option;
 		$files = array();
-		
+
 		//check if default controller exists
 		if (JFile::exists($JPATH_COMPONENT.'/controller.php'))
 		{
 			$files[] = $JPATH_COMPONENT.'/controller.php';
 		}
-		
+
 		//check if controllers folder exists
 		if (JFolder::exists($JPATH_COMPONENT.'/controllers'))
 		{
@@ -123,7 +131,7 @@ class MVCOverrideHelperComponent
 			$controllers = JFolder::files($JPATH_COMPONENT.'/controllers', '.php', false, true, $exclude);
 			$files = array_merge($files, $controllers);
 		}
-		
+
 		//check if models folder exists
 		if (JFolder::exists($JPATH_COMPONENT.'/models'))
 		{
@@ -136,10 +144,10 @@ class MVCOverrideHelperComponent
 				}
 			}
 			$models = JFolder::files($JPATH_COMPONENT.'/models', '.php', true, true, $exclude);
-			
+
 			$files = array_merge($files, $models);
 		}
-		
+
 		//check if views folder exists
 		if (JFolder::exists($JPATH_COMPONENT.'/views'))
 		{
@@ -160,7 +168,7 @@ class MVCOverrideHelperComponent
 				$files = array_merge($files, $viewsFiles);
 			}
 		}
-		
+
 		if (self::hasException($option))
 		{
 			foreach (self::$_exception[$option][JFactory::getApplication()->getName()] as $type => $exceptionDatas)
@@ -171,12 +179,12 @@ class MVCOverrideHelperComponent
 					$modelContent = str_replace($exceptionData['class'], $exceptionData['class'].'Default', $modelContent);
 					// Finally we can load the base class
 					eval('?>'.$modelContent.PHP_EOL.'?>');
-					
+
 					require_once dirname(__DIR__).'/core/'.$exceptionData['destiny'];
 				}
 			}
 		}
-		
+
 		$return = array();
 		//cleaning files
 		foreach ($files as $file)
@@ -185,13 +193,13 @@ class MVCOverrideHelperComponent
 			$file = substr($file, strlen(JPATH_BASE.'/components/'));
 			$return[] = $file;
 		}
-		
+
 		return $return;
 	}
 
 	/**
 	 * Register override paths based on codepools
-	 * 
+	 *
 	 * @param string $option
 	 */
 	static private function registerPaths($option)
@@ -221,7 +229,7 @@ class MVCOverrideHelperComponent
 		{
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -229,17 +237,17 @@ class MVCOverrideHelperComponent
 	{
 		self::$_exception[$option][$application] = $data;
 	}
-	
+
 	/**
 	 * Here we initialize a file to people can add new Buttons and Submenus
-	 * 
+	 *
 	 * @param string $option
 	 * @param string $extension
 	 */
 	static public function includeSubmenu($option, $extension)
 	{
 		if (!JFactory::getApplication()->isAdmin()) return false;
-		
+
 		if ($file = JPath::find(MVCOverrideHelperOverride::addCodePath(), $option.'/initialize.php'))
 		{
 			require_once $file;

@@ -6,6 +6,11 @@
  */
 class MVCOverrideHelperComponent
 {
+	/**
+	 * Exception data to prevent override classes
+	 * 
+	 * @var array
+	 */
 	static private $_exception = array();
 
 	/**
@@ -121,8 +126,10 @@ class MVCOverrideHelperComponent
 		if (JFolder::exists($JPATH_COMPONENT.'/controllers'))
 		{
 			$exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
-			if (self::hasException($option,'views'))
+			//check if has controllers exceptions
+			if (self::hasException($option,'controllers'))
 			{
+				//add source controllers files to exception list
 				foreach (self::$_exception[$option][JFactory::getApplication()->getName()]['controllers'] as $controllerData)
 				{
 					$exclude[] = JFile::stripext($controllerData['source']);
@@ -136,8 +143,10 @@ class MVCOverrideHelperComponent
 		if (JFolder::exists($JPATH_COMPONENT.'/models'))
 		{
 			$exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
-			if (self::hasException($option,'views'))
+			//check if have some models exception
+			if (self::hasException($option,'models'))
 			{
+				//add source model files to exception list
 				foreach (self::$_exception[$option][JFactory::getApplication()->getName()]['models'] as $modelData)
 				{
 					$exclude[] = JFile::stripext($modelData['source']);
@@ -156,8 +165,10 @@ class MVCOverrideHelperComponent
 			foreach ($views as $view)
 			{
 				$exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
+				//check if have some views exception
 				if (self::hasException($option,'views'))
 				{
+					//add source views files to exception list
 					foreach (self::$_exception[$option][JFactory::getApplication()->getName()]['views'] as $viewData)
 					{
 						$exclude[] = JFile::stripext($viewData['source']);
@@ -169,6 +180,7 @@ class MVCOverrideHelperComponent
 			}
 		}
 
+		//now we check all types of exception and load custom classes
 		if (self::hasException($option))
 		{
 			foreach (self::$_exception[$option][JFactory::getApplication()->getName()] as $type => $exceptionDatas)
@@ -179,7 +191,6 @@ class MVCOverrideHelperComponent
 					$modelContent = str_replace($exceptionData['class'], $exceptionData['class'].'Default', $modelContent);
 					// Finally we can load the base class
 					eval('?>'.$modelContent.PHP_EOL.'?>');
-
 					require_once dirname(__DIR__).'/core/'.$exceptionData['destiny'];
 				}
 			}
@@ -223,6 +234,12 @@ class MVCOverrideHelperComponent
 		}
 	}
 
+	/**
+	 * Check if exists and exception for specific component/application or if has a specific exceptions by types(models, controllers, views)
+	 * 
+	 * @param string $option
+	 * @param string $key
+	 */
 	static private function hasException($option,$key=null)
 	{
 		if ( (is_null($key) && !isset(self::$_exception[$option][JFactory::getApplication()->getName()]) ) || (!empty($key) && !isset(self::$_exception[$option][JFactory::getApplication()->getName()][$key]))  )
@@ -233,6 +250,13 @@ class MVCOverrideHelperComponent
 		return true;
 	}
 
+	/**
+	 * String register and exception data to override specific files
+	 * 
+	 * @param string $option
+	 * @param string $application
+	 * @param array $data
+	 */
 	static public function addExceptionOverride($option, $application, array $data)
 	{
 		self::$_exception[$option][$application] = $data;

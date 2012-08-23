@@ -159,9 +159,10 @@ abstract class JModuleHelper extends JModuleHelperLibraryDefault
 		// Build the template and base path for the layout
 		$templatePaths = array(
 			JPATH_THEMES . '/' . $template . '/html/' . $module,
-			JPATH_BASE . '/modules/' . $module . '/tmpl',
 		);
-		$templatePaths = array_merge(self::$includePaths, $templatePaths);
+		$templatePaths = array_merge($templatePaths, self::$includePaths);
+		$templatePaths[] = JPATH_BASE . '/modules/' . $module . '/tmpl';
+		
 		$dPath = JPATH_BASE . '/modules/' . $module . '/tmpl/default.php';
 
 		// If the template has a layout override use it

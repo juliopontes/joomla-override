@@ -14,6 +14,12 @@ require_once 'helper/component.php';
  */
 class PlgSystemMVCOverride extends JPlugin
 {
+	/**
+	 * onAfterInitialise function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	public function onAfterInitialise()
 	{	
 		MVCOverrideHelperOverride::initialize();
@@ -22,7 +28,7 @@ class PlgSystemMVCOverride extends JPlugin
 		
 		//code pools
 		$includePath = array();
-		//base extensions path
+		//global extensions path
 		$includePath[] = JPATH_BASE.'/code';
 		//template code path
 		$includePath[] = JPATH_THEMES.'/'.$template.'/code';
@@ -55,6 +61,12 @@ class PlgSystemMVCOverride extends JPlugin
 		MVCOverrideHelperComponent::preload($this->option, $this->params);
 	}
 	
+	/**
+	 * onAfterDispatch function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	public function onAfterDispatch()
 	{
 		MVCOverrideHelperComponent::includeSubmenu($this->option,$this->extension);

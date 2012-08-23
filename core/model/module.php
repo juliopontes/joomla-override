@@ -146,7 +146,7 @@ class ModulesModelModule extends ModulesModelModuleDefault
 		return $this->_cache[$pk];
 	}
 
-/**
+	/**
 	 * Method to preprocess the form
 	 *
 	 * @param   JForm   $form   A form object.

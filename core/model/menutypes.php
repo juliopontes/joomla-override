@@ -9,7 +9,7 @@ defined('_JEXEC') or die;
  * @subpackage	com_menus
  * @version		1.6
  */
-class MenusModelMenutypes extends COM_MenusModelMenutypesDefault
+class MenusModelMenutypes extends MenusModelMenutypesDefault
 {
 	/**
 	 * Sync with codepools

@@ -1,166 +1,103 @@
 <?php
-/**
- * Registry codepools and intialize basic override for core classes
- * 
- * @author juliopontes <juliopfneto@gmail.com>
- */
-class MVCOverrideHelperOverride
+abstract class MVCOverrideHelperOverride
 {
 	/**
-	 * Register global paths to override code
+	 * Default sufix of class overrides
 	 * 
-	 * @var array
+	 * @var string
 	 */
-	private static $_paths = array();
+	const SUFIX = 'Default';
 
 	/**
-	 * Initialize override of some core classes
+	 * Default presufix of class overrides
 	 * 
+	 * @var string
 	 */
-	static public function initialize()
+	const PREFIX = '';
+
+	static public function getClassName($componentFile,$prefix=null,$sufix=null)
 	{
-		$plugin_path = dirname(dirname(__FILE__));
+		$bufferFile = JFile::read($componentFile);
 		
-		//exception for implement new features
-		$exceptionDatas = array(
-			array(
-				'option' => 'com_menus',
-				'application' => 'administrator',
-				'data' => array(
-					'models' => array(
-						array(
-							'class' => 'MenusModelMenutypes',
-							'source' => '/models/menutypes.php',
-							'destiny' => '/model/menutypes.php',
-						)
-					)
-				)
-			),
-			array(
-				'option' => 'com_modules',
-				'application' => 'administrator',
-				'data' => array(
-					'models' => array(
-						array(
-							'class' => 'ModulesModelModule',
-							'source' => '/models/module.php',
-							'destiny' => '/model/module.php',
-						)
-					)
-				)
-			)
-		);
-		
-		if (JVERSION > 2.5)
+		//set default values if null
+		if (is_null($sufix))
 		{
-			$overrideClasses = array(
-				array(
-					'source_file' => JPATH_LIBRARIES.'/legacy/module/helper.php',
-					'class_name' => 'JModuleHelper',
-					'jimport' => '',
-					'override_file' => $plugin_path.'/core/module/helper.php'
-				),
-				array(
-					'source_file' => JPATH_LIBRARIES.'/legacy/model/form.php',
-					'class_name' => 'JModelForm',
-					'jimport' => '',
-					'override_file' => $plugin_path.'/core/model/modelform.php'
-				),
-				array(
-					'source_file' => JPATH_LIBRARIES.'/legacy/controller/legacy.php',
-					'class_name' => 'JControllerLegacy',
-					'jimport' => '',
-					'override_file' => $plugin_path.'/core/controller/legacy.php'
-				),
-				array(
-					'source_file' => JPATH_LIBRARIES.'/legacy/view/legacy.php',
-					'class_name' => 'JViewLegacy',
-					'jimport' => '',
-					'override_file' => $plugin_path.'/core/view/legacy.php'
-				)
-			);
+			$sufix = self::SUFIX;
 		}
-		else {
-			$overrideClasses = array(
-				array(
-					'source_file' => JPATH_LIBRARIES.'/joomla/application/module/helper.php',
-					'class_name' => 'JModuleHelper',
-					'jimport' => 'joomla.application.module.helper',
-					'override_file' => $plugin_path.'/core/module/helper.php'
-				),
-				array(
-					'source_file' => JPATH_LIBRARIES.'/application/component/modelform.php',
-					'class_name' => 'JModelForm',
-					'jimport' => 'joomla.application.component.modelform',
-					'override_file' => $plugin_path.'/core/model/modelform.php'
-				),
-				array(
-					'source_file' => JPATH_LIBRARIES.'/joomla/application/component/controller.php',
-					'class_name' => 'JController',
-					'jimport' => 'joomla.application.component.controller',
-					'override_file' => $plugin_path.'/core/controller/controller.php'
-				),
-				array(
-					'source_file' => JPATH_LIBRARIES.'/application/component/view.php',
-					'class_name' => 'JView',
-					'jimport' => 'joomla.application.component.view',
-					'override_file' => $plugin_path.'/core/view/view.php'
-				)
-			);
+		if (is_null($prefix))
+		{
+			$prefix = self::PREFIX;
 		}
 		
-		foreach ($overrideClasses as $overrideClass)
+		$originalClass = self::getOriginalClass($bufferFile);
+		
+		return $prefix.$originalClass.$sufix;
+	}
+	
+	static public function getOriginalClass($bufferContent)
+	{
+		$originalClass = null;
+		$tokens = token_get_all($bufferContent);
+		foreach( $tokens as $key => $token)
 		{
-			self::overrideClass($overrideClass['source_file'], $overrideClass['class_name'], $overrideClass['jimport'], $overrideClass['override_file']);
+			if(is_array($token))
+	        {
+	        	// Find the class declaration
+	        	if (token_name($token[0]) == 'T_CLASS')
+				{
+					// Class name should be in the key+2 position
+					$originalClass = $tokens[$key+2][1];
+					break;
+				}
+			}
 		}
 		
-		foreach ($exceptionDatas as $exceptionData)
-		{
-			MVCOverrideHelperComponent::addExceptionOverride($exceptionData['option'], $exceptionData['application'], $exceptionData['data']);
-		}
+		return $originalClass;
 	}
 
 	/**
-	 * Override a core classes and just overload methods that need
+	 * Read source file and replace class name by adding sufix/prefix
 	 * 
-	 * @param string $sourcePath
-	 * @param string $class
-	 * @param string $jimport
-	 * @param string $replacePath
+	 * @param string $componentFile
+	 * @param string $sufix
+	 * @param string $prefix
 	 */
-	static private function overrideClass($sourcePath, $class, $jimport, $replacePath)
-	{
-		//override JModuleHelper library class
-		$libContent = JFile::read($sourcePath);
-		$libContent = str_replace($class, $class.'LibraryDefault', $libContent);
-		// Finally we can load the base class
-		eval('?>'.$libContent.PHP_EOL.'?>');
-		if (!empty($jimport)) jimport($jimport);
-		JLoader::register($class, $replacePath, true);
+	static public function createDefaultClass($componentFile,$prefix=null,$sufix=null)
+	{	
+		$bufferFile = JFile::read($componentFile);
+		
+		$originalClass = self::getOriginalClass($bufferFile);
+		$replaceClass = self::getClassName($componentFile, $prefix, $sufix);
+		//replace original class name by default
+		$bufferContent = str_replace($originalClass,$replaceClass,$bufferFile);
+		
+		return $bufferContent;
 	}
 
 	/**
-	 * Add a code pool to override
+	 * Will search for defined JPATH_COMPONENT, JPATH_SITE, JPATH_ADMINISTRATOR and replace by right values
 	 * 
-	 * @param string $path
+	 * @param string $bufferFile
 	 */
-	static public function addCodePath($path = null)
+	static public function fixDefines($bufferContent)
 	{
-		if (is_null($path))
+		//detect if source file use some constants
+		preg_match_all('/JPATH_COMPONENT(_SITE|_ADMINISTRATOR)|JPATH_COMPONENT/i', $bufferContent, $definesSource);
+		//replace JPATH_COMPONENT constants if found, because we are loading before define these constants
+		if (count($definesSource[0]))
 		{
-			return self::$_paths;
+			$bufferContent = preg_replace(array('/JPATH_COMPONENT/','/JPATH_COMPONENT_SITE/','/JPATH_COMPONENT_ADMINISTRATOR/'),array('JPATH_SOURCE_COMPONENT','JPATH_SOURCE_COMPONENT_SITE','JPATH_SOURCE_COMPONENT_ADMINISTRATOR'),$bufferContent);
 		}
 		
-		settype($path, 'array');
-		
-		foreach ($path as $codePool)
+		return $bufferContent;
+	}
+	
+	static public function load($bufferContent)
+	{
+		if (!empty($bufferContent))
 		{
-			$codePool = JPath::clean($codePool);
-			JModuleHelper::addIncludePath($codePool);
-			
-			array_push(self::$_paths, $codePool);
+			// Finally we can load the base class
+			eval('?>'.$bufferContent.PHP_EOL.'?>');
 		}
-		
-		return self::$_paths;
 	}
 }

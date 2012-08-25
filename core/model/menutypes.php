@@ -9,7 +9,7 @@ defined('_JEXEC') or die;
  * @subpackage	com_menus
  * @version		1.6
  */
-class MenusModelMenutypes extends MenusModelMenutypesDefault
+class MenusModelMenutypes extends COM_MenusModelMenutypesDefault
 {
 	/**
 	 * Sync with codepools
@@ -24,7 +24,7 @@ class MenusModelMenutypes extends MenusModelMenutypesDefault
 		$paths = array(
 			JPATH_SITE.'/components/'.$component,
 		);
-		foreach (MVCOverrideHelperOverride::addCodePath() as $codePool)
+		foreach (MVCOverrideHelperCodepool::addCodePath() as $codePool)
 		{
 			$paths[] = JPath::clean($codePool.'/'.$component);
 		}

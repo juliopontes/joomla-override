@@ -9,7 +9,7 @@ defined('_JEXEC') or die;
  * @subpackage  Module
  * @since       11.1
  */
-abstract class JModelForm extends JModelFormLibraryDefault
+abstract class JModelForm extends LIB_JModelFormDefault
 {
 	/**
 	 * Array to registry paths from component form and gields

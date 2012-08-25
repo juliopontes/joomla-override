@@ -5,6 +5,8 @@ defined('_JEXEC') or die;
 jimport('joomla.plugin.plugin');
 
 require_once 'helper/override.php';
+require_once 'core/loader.php';
+require_once 'helper/codepool.php';
 require_once 'helper/component.php';
 
 /**
@@ -22,7 +24,7 @@ class PlgSystemMVCOverride extends JPlugin
 	 */
 	public function onAfterInitialise()
 	{	
-		MVCOverrideHelperOverride::initialize();
+		MVCOverrideHelperCodepool::initialize();
 		//template name
 		$template = JFactory::getApplication()->getTemplate();
 		
@@ -33,7 +35,7 @@ class PlgSystemMVCOverride extends JPlugin
 		//template code path
 		$includePath[] = JPATH_THEMES.'/'.$template.'/code';
 		
-		MVCOverrideHelperOverride::addCodePath($includePath);
+		MVCOverrideHelperCodepool::addCodePath($includePath);
 	}
 	
 	/**

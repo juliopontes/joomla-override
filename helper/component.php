@@ -23,7 +23,7 @@ class MVCOverrideHelperComponent
 	 */
 	static public function preload($option, $params)
 	{
-		if (count(MVCOverrideHelperOverride::addCodePath()) == 0) return;
+		if (count(MVCOverrideHelperCodepool::addCodePath()) == 0) return;
 
 		//get files that can be overrided
 		$componentOverrideFiles = self::loadComponentFiles($option);
@@ -32,65 +32,24 @@ class MVCOverrideHelperComponent
 		//loading override files
 		if( !empty($componentOverrideFiles) )
 		{
+			//constants to replace JPATH_COMPONENT, JPATH_COMPONENT_SITE and JPATH_COMPONENT_ADMINISTRATOR
+			define('JPATH_SOURCE_COMPONENT',JPATH_BASE.'/components/'.$option);
+			define('JPATH_SOURCE_COMPONENT_SITE',JPATH_SITE.'/components/'.$option);
+			define('JPATH_SOURCE_COMPONENT_ADMINISTRATOR',JPATH_ADMINISTRATOR.'/components/'.$option);
+			
 			foreach($componentOverrideFiles as $componentFile)
 			{
-				if($filePath = JPath::find(MVCOverrideHelperOverride::addCodePath(),$componentFile))
+				if($filePath = JPath::find(MVCOverrideHelperCodepool::addCodePath(),$componentFile))
 				{
 					//include the original code and replace class name add a Default on
 					if ($params->get('extendDefault',0))
 					{
-						$bufferFile = JFile::read(JPATH_BASE.'/components/'.$componentFile);
-						//detect if source file use some constants
-						preg_match_all('/JPATH_COMPONENT(_SITE|_ADMINISTRATOR)|JPATH_COMPONENT/i', $bufferFile, $definesSource);
-
-						$bufferOverrideFile = JFile::read($filePath);
-						//detect if override file use some constants
-						preg_match_all('/JPATH_COMPONENT(_SITE|_ADMINISTRATOR)|JPATH_COMPONENT/i', $bufferOverrideFile, $definesSourceOverride);
-
-						// Append "Default" to the class name (ex. ClassNameDefault). We insert the new class name into the original regex match to get
-						$originalClass = null;
-						$tokens = token_get_all($bufferFile);
-					    foreach( $tokens as $key => $token)
-					    {
-					        if(is_array($token))
-					        {
-					        	// Find the class declaration
-					        	if (token_name($token[0]) == 'T_CLASS')
-			        			{
-			        				// Class name should be in the key+2 position
-									$originalClass = $tokens[$key+2][1];
-									break;
-			        			}
-					        }
-					    }
-						$replaceClass = $originalClass.'Default';
-
-						if (count($definesSourceOverride[0]))
+						if (!class_exists(MVCOverrideHelperOverride::getClassName(JPATH_BASE.'/components/'.$componentFile)))
 						{
-							JError::raiseError('Plugin MVC Override','Your override file use constants, please replace code constants<br />JPATH_COMPONENT -> JPATH_SOURCE_COMPONENT,<br />JPATH_COMPONENT_SITE -> JPATH_SOURCE_COMPONENT_SITE and<br />JPATH_COMPONENT_ADMINISTRATOR -> JPATH_SOURCE_COMPONENT_ADMINISTRATOR');
+							MVCOverrideHelperOverride::load(MVCOverrideHelperOverride::fixDefines(MVCOverrideHelperOverride::createDefaultClass(JPATH_BASE.'/components/'.$componentFile)));
 						}
-						else
-						{
-							//replace original class name by default
-							$bufferContent = str_replace($originalClass,$replaceClass,$bufferFile);
-
-							//replace JPATH_COMPONENT constants if found, because we are loading before define these constants
-							if (count($definesSource[0]))
-							{
-								$bufferContent = preg_replace(array('/JPATH_COMPONENT/','/JPATH_COMPONENT_SITE/','/JPATH_COMPONENT_ADMINISTRATOR/'),array('JPATH_SOURCE_COMPONENT','JPATH_SOURCE_COMPONENT_SITE','JPATH_SOURCE_COMPONENT_ADMINISTRATOR'),$bufferContent);
-							}
-
-							// Change private methods to protected methods
-							if ($params->get('changePrivate',0))
-							{
-								$bufferContent = preg_replace('/private *function/i', 'protected function', $bufferContent);
-							}
-
-							// Finally we can load the base class
-							eval('?>'.$bufferContent.PHP_EOL.'?>');
-
-							require_once $filePath;
-						}
+						
+						require_once $filePath;
 					}
 					else
 					{
@@ -215,7 +174,7 @@ class MVCOverrideHelperComponent
 	 */
 	static private function registerPaths($option)
 	{
-		foreach (MVCOverrideHelperOverride::addCodePath() as $codePool)
+		foreach (MVCOverrideHelperCodepool::addCodePath() as $codePool)
 		{
 			if (JVERSION > 2.5)
 			{
@@ -272,13 +231,13 @@ class MVCOverrideHelperComponent
 	{
 		if (!JFactory::getApplication()->isAdmin()) return false;
 
-		if ($file = JPath::find(MVCOverrideHelperOverride::addCodePath(), $option.'/initialize.php'))
+		if ($file = JPath::find(MVCOverrideHelperCodepool::addCodePath(), $option.'/initialize.php'))
 		{
 			require_once $file;
 		}
 		if ($option == 'com_categories' && !empty($extension))
 		{
-			if ($file = JPath::find(MVCOverrideHelperOverride::addCodePath(), $extension.'/initialize.php'))
+			if ($file = JPath::find(MVCOverrideHelperCodepool::addCodePath(), $extension.'/initialize.php'))
 			{
 				require_once $file;
 			}

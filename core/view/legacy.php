@@ -9,7 +9,7 @@ defined('_JEXEC') or die;
  * @subpackage  Module
  * @since       11.1
  */
-abstract class JViewLegacy extends JViewLegacyLibraryDefault
+abstract class JViewLegacy extends LIB_JViewLegacyDefault
 {
 	/**
 	 * Register new paths to helpers and templates

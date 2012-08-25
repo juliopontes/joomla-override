@@ -8,7 +8,7 @@ defined('_JEXEC') or die;
  * @subpackage  com_modules
  * @since       1.6
  */
-class ModulesModelModule extends ModulesModelModuleDefault
+class ModulesModelModule extends COM_ModulesModelModuleDefault
 {
 	/**
 	 * Method to get a single record.

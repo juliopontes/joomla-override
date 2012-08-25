@@ -9,7 +9,7 @@ defined('_JEXEC') or die;
  * @subpackage  Module
  * @since       11.1
  */
-abstract class JControllerLegacy extends JControllerLegacyLibraryDefault
+abstract class JControllerLegacy extends LIB_JControllerLegacyDefault
 {
 	/**
 	 * Method to get a singleton controller instance.
@@ -63,7 +63,7 @@ abstract class JControllerLegacy extends JControllerLegacyLibraryDefault
 			$template = JFactory::getApplication()->getTemplate();
 			
 			$includePaths[] = $basePath . '/controllers';
-			foreach (MVCOverrideHelperOverride::addCodePath() as $codepool)
+			foreach (MVCOverrideHelperCodepool::addCodePath() as $codepool)
 			{
 				$includePaths[] = $codepool.'/'.$option.'/controllers';
 			}
@@ -79,7 +79,7 @@ abstract class JControllerLegacy extends JControllerLegacyLibraryDefault
 			$task = $command;
 			
 			$includePaths[] = $basePath;
-			foreach (MVCOverrideHelperOverride::addCodePath() as $codepool)
+			foreach (MVCOverrideHelperCodepool::addCodePath() as $codepool)
 			{
 				$includePaths[] = $codepool.'/'.$option;
 			}
@@ -148,7 +148,7 @@ abstract class JControllerLegacy extends JControllerLegacyLibraryDefault
 	protected function createView($name, $prefix = '', $type = '', $config = array())
 	{
 		$option = JFactory::getApplication()->input->get('option');
-		foreach (MVCOverrideHelperOverride::addCodePath() as $codepool)
+		foreach (MVCOverrideHelperCodepool::addCodePath() as $codepool)
 		{
 			$this->addViewPath($codepool.'/'.$option.'/views');
 		}

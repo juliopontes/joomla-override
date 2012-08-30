@@ -14,7 +14,7 @@ require_once 'helper/component.php';
  * 
  * @extends JPlugin
  */
-class PlgSystemOverride extends JPlugin
+class PlgSystemJoomlaOverride extends JPlugin
 {
 	/**
 	 * onAfterInitialise function.

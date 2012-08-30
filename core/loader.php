@@ -85,4 +85,19 @@ spl_autoload_register(function($class_name){
 			}
 		}
 	}
+	if (strpos($class_name,'table') !== false)
+	{
+		$parts = split('table',$class_name);
+		
+		$file = '/components/com_'.strtolower($parts[0]).'/tables/'.strtolower(end($parts)).'.php';
+		
+		if (is_file(JPATH_BASE.$file))
+		{
+			
+			if (!class_exists($original_class))
+			{
+				MVCOverrideHelperOverride::load(MVCOverrideHelperOverride::fixDefines(MVCOverrideHelperOverride::createDefaultClass(JPATH_BASE.$file)));
+			}
+		}
+	}
 });

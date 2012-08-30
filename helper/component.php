@@ -188,6 +188,7 @@ class MVCOverrideHelperComponent
 				JView::addViewHelperPath($codePool.'/'.$option);
 				JView::addViewTemplatePath($codePool.'/'.$option);
 			}
+			JTable::addIncludePath($codePool.'/'.$option.'/tables');
 			JModelForm::addComponentFormPath($codePool.'/'.$option.'/models/forms');
 			JModelForm::addComponentFieldPath($codePool.'/'.$option.'/models/fields');
 		}

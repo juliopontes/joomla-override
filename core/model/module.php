@@ -130,7 +130,12 @@ class ModulesModelModule extends ModulesModelModuleDefault
 
 			// Get the module XML.
 			$client	= JApplicationHelper::getClientInfo($table->client_id);
-			$paths = array($client->path. '/code/', $client->path. '/modules/');
+			$basePath = JPATH_SITE.'/override';
+			if ($client->id == JFactory::getApplication()->getClientId())
+			{
+				$basePath .= '/administrator';
+			}
+			$paths = array($basePath, $client->path. '/modules/');
 			$path = JPath::find($paths, $table->module . '/' . $table->module . '.xml');
 
 			if (file_exists($path))
@@ -168,7 +173,14 @@ class ModulesModelModule extends ModulesModelModuleDefault
 		$module   = $this->getState('item.module');
 
 		$client   = JApplicationHelper::getClientInfo($clientId);
-		$paths = array($client->path. '/code/', $client->path. '/modules/');
+		
+		$basePath = JPATH_SITE.'/override';
+		if ($client->id == JFactory::getApplication()->getClientId())
+		{
+			$basePath .= '/administrator';
+		}
+		
+		$paths = array($basePath, $client->path. '/modules/');
 		$formFile = JPath::find($paths, $module . '/' . $module . '.xml');
 
 		// Load the core and/or local language file(s).

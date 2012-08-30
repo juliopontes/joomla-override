@@ -1,8 +1,6 @@
 <?php
 spl_autoload_register(function($class_name){
 	$original_class = $class_name;
-	
-	
 	$sufix = MVCOverrideHelperOverride::SUFIX;
 	$prefix = MVCOverrideHelperOverride::PREFIX;
 	
@@ -17,7 +15,6 @@ spl_autoload_register(function($class_name){
 	{
 		return false;
 	}
-	
 	
 	//check for com_class_namedefault
 	if (!empty($prefix))

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="2.5" type="plugin" group="system" method="upgrade">
-	<name>System - MVC Override</name>
+	<name>System - Joomla Override</name>
 	<author>Julio Pontes</author>
 	<creationDate>March 2012</creationDate>
 	<copyright>Copyright (C) 2005 - 2010 Open Source Matters. All rights reserved.</copyright>
@@ -9,7 +9,7 @@
 	<authorUrl>http://twitter.com/juliopontes</authorUrl>
 	<version>2.5.5</version>
 	<description>
-		Provides a component MVC override. If you wish to support donate U$ 0,99 to project. https://t.co/wVCmFpKB
+		Provides a joomla override. If you wish to support donate U$ 0,99 to project. https://t.co/wVCmFpKB
 	</description>
 	<files>
 		<filename plugin="mvcoverride">mvcoverride.php</filename>

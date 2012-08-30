@@ -10,11 +10,11 @@ require_once 'helper/codepool.php';
 require_once 'helper/component.php';
 
 /**
- * PlgSystemMVCOverride class.
+ * PlgSystemOverride class.
  * 
  * @extends JPlugin
  */
-class PlgSystemMVCOverride extends JPlugin
+class PlgSystemOverride extends JPlugin
 {
 	/**
 	 * onAfterInitialise function.
@@ -31,7 +31,14 @@ class PlgSystemMVCOverride extends JPlugin
 		//code pools
 		$includePath = array();
 		//global extensions path
-		$includePath[] = JPATH_BASE.'/code';
+		$basePath = JPATH_SITE.'/override';
+		//add administrator scope
+		if (JFactory::getApplication()->isAdmin())
+		{
+			$basePath .= '/administrator';
+		}
+		
+		$includePath[] = $basePath;
 		//template code path
 		$includePath[] = JPATH_THEMES.'/'.$template.'/code';
 		

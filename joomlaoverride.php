@@ -10,8 +10,6 @@
 // no direct access
 defined('_JEXEC') or die;
 
-ini_set('display_errors', 'true');
-
 jimport('joomla.plugin.plugin');
 
 require_once 'helper/override.php';

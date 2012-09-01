@@ -83,7 +83,3 @@ class PlgSystemJoomlaOverride extends JPlugin
 		JoomlaOverrideHelperComponent::includeInitialize($this->option,$this->extension);
 	}
 }
-	{
-		JoomlaOverrideHelperComponent::includeInitialize($this->option,$this->extension);
-	}
-}

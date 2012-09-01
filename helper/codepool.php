@@ -1,5 +1,16 @@
 <?php
 /**
+* @package Joomla.Plugin
+* @subpackage System.joomlaoverride
+*
+* @copyright Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
+* @license GNU General Public License version 2 or later; see LICENSE.txt
+*/
+ 
+// no direct access
+defined('_JEXEC') or die;
+
+/**
  * Registry codepools and intialize basic override for core classes
  * 
  * @author juliopontes <juliopfneto@gmail.com>

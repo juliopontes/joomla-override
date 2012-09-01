@@ -130,7 +130,12 @@ class ModulesModelModule extends ModulesModelModuleDefault
 
 			// Get the module XML.
 			$client	= JApplicationHelper::getClientInfo($table->client_id);
-			$basePath = JPATH_SITE.'/override';
+			$query = $db->getQuery(true);
+			$query->select('params')->from('#__extensions')->where('type="plugin" AND element = "joomlaoverride"');
+			$db->setQuery($query);
+			$pluginParams = new JRegistry($db->loadResult());
+			
+			$basePath = JPath::clean(JPATH_SITE.DIRECTORY_SEPARATOR.$pluginParams->get('global_path'));
 			if ($client->id == JFactory::getApplication()->getClientId())
 			{
 				$basePath .= '/administrator';
@@ -174,7 +179,14 @@ class ModulesModelModule extends ModulesModelModuleDefault
 
 		$client   = JApplicationHelper::getClientInfo($clientId);
 		
-		$basePath = JPATH_SITE.'/override';
+		$db = JFactory::getDbo();
+		
+		$query = $db->getQuery(true);
+		$query->select('params')->from('#__extensions')->where('type="plugin" AND element = "joomlaoverride"');
+		$db->setQuery($query);
+		$pluginParams = new JRegistry($db->loadResult());
+		
+		$basePath = JPath::clean(JPATH_SITE.DIRECTORY_SEPARATOR.$pluginParams->get('global_path'));
 		if ($client->id == JFactory::getApplication()->getClientId())
 		{
 			$basePath .= '/administrator';

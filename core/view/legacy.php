@@ -59,8 +59,6 @@ abstract class JViewLegacy extends LIB_JViewLegacyDefault
 			}
 		}
 		
-		die(__FILE__);
-		
 		return parent::loadHelper($hlp);
 	}
 

@@ -4,7 +4,7 @@
  *
  * @author juliopontes <juliopfneto@gmail.com>
  */
-class MVCOverrideHelperComponent
+class JoomlaOverrideHelperComponent
 {
 	/**
 	 * Exception data to prevent override classes
@@ -23,7 +23,7 @@ class MVCOverrideHelperComponent
 	 */
 	static public function preload($option, $params)
 	{
-		if (count(MVCOverrideHelperCodepool::addCodePath()) == 0) return;
+		if (count(JoomlaOverrideHelperCodepool::addCodePath()) == 0) return;
 
 		//get files that can be overrided
 		$componentOverrideFiles = self::loadComponentFiles($option);
@@ -39,14 +39,14 @@ class MVCOverrideHelperComponent
 			
 			foreach($componentOverrideFiles as $componentFile)
 			{
-				if($filePath = JPath::find(MVCOverrideHelperCodepool::addCodePath(),$componentFile))
+				if($filePath = JPath::find(JoomlaOverrideHelperCodepool::addCodePath(),$componentFile))
 				{
 					//include the original code and replace class name add a Default on
 					if ($params->get('extendDefault',0))
 					{
-						if (!class_exists(MVCOverrideHelperOverride::getClassName(JPATH_BASE.'/components/'.$componentFile)))
+						if (!class_exists(JoomlaOverrideHelperOverride::getClassName(JPATH_BASE.'/components/'.$componentFile)))
 						{
-							MVCOverrideHelperOverride::load(MVCOverrideHelperOverride::fixDefines(MVCOverrideHelperOverride::createDefaultClass(JPATH_BASE.'/components/'.$componentFile)));
+							JoomlaOverrideHelperOverride::load(JoomlaOverrideHelperOverride::fixDefines(JoomlaOverrideHelperOverride::createDefaultClass(JPATH_BASE.'/components/'.$componentFile)));
 						}
 						
 						require_once $filePath;
@@ -111,7 +111,7 @@ class MVCOverrideHelperComponent
 					$exclude[] = JFile::stripext($modelData['source']);
 				}
 			}
-			$models = JFolder::files($JPATH_COMPONENT.'/models', '.php', true, true, $exclude);
+			$models = JFolder::files($JPATH_COMPONENT.'/models', '.php', false, true, $exclude);
 
 			$files = array_merge($files, $models);
 		}
@@ -174,7 +174,7 @@ class MVCOverrideHelperComponent
 	 */
 	static private function registerPaths($option)
 	{
-		foreach (MVCOverrideHelperCodepool::addCodePath() as $codePool)
+		foreach (JoomlaOverrideHelperCodepool::addCodePath() as $codePool)
 		{
 			if (JVERSION > 2.5)
 			{
@@ -228,17 +228,17 @@ class MVCOverrideHelperComponent
 	 * @param string $option
 	 * @param string $extension
 	 */
-	static public function includeSubmenu($option, $extension)
+	static public function includeInitialize($option, $extension)
 	{
 		if (!JFactory::getApplication()->isAdmin()) return false;
 
-		if ($file = JPath::find(MVCOverrideHelperCodepool::addCodePath(), $option.'/initialize.php'))
+		if ($file = JPath::find(JoomlaOverrideHelperCodepool::addCodePath(), $option.'/initialize.php'))
 		{
 			require_once $file;
 		}
 		if ($option == 'com_categories' && !empty($extension))
 		{
-			if ($file = JPath::find(MVCOverrideHelperCodepool::addCodePath(), $extension.'/initialize.php'))
+			if ($file = JPath::find(JoomlaOverrideHelperCodepool::addCodePath(), $extension.'/initialize.php'))
 			{
 				require_once $file;
 			}

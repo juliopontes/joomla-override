@@ -1,8 +1,8 @@
 <?php
 spl_autoload_register(function($class_name){
 	$original_class = $class_name;
-	$sufix = MVCOverrideHelperOverride::SUFIX;
-	$prefix = MVCOverrideHelperOverride::PREFIX;
+	$sufix = JoomlaOverrideHelperOverride::SUFIX;
+	$prefix = JoomlaOverrideHelperOverride::PREFIX;
 	
 	$class_prefix = substr($class_name,0,strlen($prefix));
 	$class_sufix = substr($class_name,strlen($sufix) * -1);
@@ -51,7 +51,7 @@ spl_autoload_register(function($class_name){
 		{
 			if (!class_exists($original_class))
 			{
-				MVCOverrideHelperOverride::load(MVCOverrideHelperOverride::fixDefines(MVCOverrideHelperOverride::createDefaultClass(JPATH_BASE.$file)));
+				JoomlaOverrideHelperOverride::load(JoomlaOverrideHelperOverride::fixDefines(JoomlaOverrideHelperOverride::createDefaultClass(JPATH_BASE.$file)));
 			}
 		}
 	}
@@ -65,7 +65,7 @@ spl_autoload_register(function($class_name){
 		{
 			if (!class_exists($original_class))
 			{
-				MVCOverrideHelperOverride::load(MVCOverrideHelperOverride::fixDefines(MVCOverrideHelperOverride::createDefaultClass(JPATH_BASE.$file)));
+				JoomlaOverrideHelperOverride::load(JoomlaOverrideHelperOverride::fixDefines(JoomlaOverrideHelperOverride::createDefaultClass(JPATH_BASE.$file)));
 			}
 		}
 	}
@@ -81,7 +81,7 @@ spl_autoload_register(function($class_name){
 			
 			if (!class_exists($original_class))
 			{
-				MVCOverrideHelperOverride::load(MVCOverrideHelperOverride::fixDefines(MVCOverrideHelperOverride::createDefaultClass(JPATH_BASE.$file)));
+				JoomlaOverrideHelperOverride::load(JoomlaOverrideHelperOverride::fixDefines(JoomlaOverrideHelperOverride::createDefaultClass(JPATH_BASE.$file)));
 			}
 		}
 	}
@@ -96,7 +96,7 @@ spl_autoload_register(function($class_name){
 			
 			if (!class_exists($original_class))
 			{
-				MVCOverrideHelperOverride::load(MVCOverrideHelperOverride::fixDefines(MVCOverrideHelperOverride::createDefaultClass(JPATH_BASE.$file)));
+				JoomlaOverrideHelperOverride::load(JoomlaOverrideHelperOverride::fixDefines(JoomlaOverrideHelperOverride::createDefaultClass(JPATH_BASE.$file)));
 			}
 		}
 	}

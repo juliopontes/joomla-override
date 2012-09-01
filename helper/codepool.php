@@ -4,7 +4,7 @@
  * 
  * @author juliopontes <juliopfneto@gmail.com>
  */
-class MVCOverrideHelperCodepool
+class JoomlaOverrideHelperCodepool
 {
 	/**
 	 * Register global paths to override code
@@ -116,7 +116,7 @@ class MVCOverrideHelperCodepool
 		
 		foreach ($exceptionDatas as $exceptionData)
 		{
-			MVCOverrideHelperComponent::addExceptionOverride($exceptionData['option'], $exceptionData['application'], $exceptionData['data']);
+			JoomlaOverrideHelperComponent::addExceptionOverride($exceptionData['option'], $exceptionData['application'], $exceptionData['data']);
 		}
 	}
 
@@ -131,7 +131,7 @@ class MVCOverrideHelperCodepool
 	static private function overrideClass($sourcePath, $class, $jimport, $replacePath)
 	{
 		//override library class
-		MVCOverrideHelperOverride::load(MVCOverrideHelperOverride::createDefaultClass($sourcePath,'LIB_'));
+		JoomlaOverrideHelperOverride::load(JoomlaOverrideHelperOverride::createDefaultClass($sourcePath,'LIB_'));
 		
 		if (!empty($jimport)) jimport($jimport);
 		JLoader::register($class, $replacePath, true);

@@ -63,7 +63,7 @@ abstract class JController extends LIB_JControllerDefault
 			$template = JFactory::getApplication()->getTemplate();
 			
 			$includePaths[] = $basePath . '/controllers';
-			foreach (MVCOverrideHelperCodepool::addCodePath() as $codepool)
+			foreach (JoomlaOverrideHelperCodepool::addCodePath() as $codepool)
 			{
 				$includePaths[] = $codepool.'/'.$option.'/controllers';
 			}
@@ -79,7 +79,7 @@ abstract class JController extends LIB_JControllerDefault
 			$task = $command;
 			
 			$includePaths[] = $basePath;
-			foreach (MVCOverrideHelperCodepool::addCodePath() as $codepool)
+			foreach (JoomlaOverrideHelperCodepool::addCodePath() as $codepool)
 			{
 				$includePaths[] = $codepool.'/'.$option;
 			}
@@ -148,7 +148,7 @@ abstract class JController extends LIB_JControllerDefault
 	protected function createView($name, $prefix = '', $type = '', $config = array())
 	{
 		$option = JFactory::getApplication()->input->get('option');
-		foreach (MVCOverrideHelperCodepool::addCodePath() as $codepool)
+		foreach (JoomlaOverrideHelperCodepool::addCodePath() as $codepool)
 		{
 			$this->addViewPath($codepool.'/'.$option.'/views');
 		}

@@ -24,7 +24,7 @@ class MenusModelMenutypes extends MenusModelMenutypesDefault
 		$paths = array(
 			JPATH_SITE.'/components/'.$component,
 		);
-		foreach (MVCOverrideHelperCodepool::addCodePath() as $codePool)
+		foreach (JoomlaOverrideHelperCodepool::addCodePath() as $codePool)
 		{
 			$paths[] = JPath::clean($codePool.'/'.$component);
 		}

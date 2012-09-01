@@ -49,6 +49,8 @@ abstract class JControllerLegacy extends LIB_JControllerLegacyDefault
 		
 		$includePaths = array();
 
+		$option = JFactory::getApplication()->input->get('option');
+
 		// Check for a controller.task command.
 		if (strpos($command, '.') !== false)
 		{
@@ -58,12 +60,12 @@ abstract class JControllerLegacy extends LIB_JControllerLegacyDefault
 			// Define the controller filename and path.
 			$file = self::createFileName('controller', array('name' => $type, 'format' => $format));
 			
-			$option = JFactory::getApplication()->input->get('option');
+			
 			//template name
 			$template = JFactory::getApplication()->getTemplate();
 			
 			$includePaths[] = $basePath . '/controllers';
-			foreach (MVCOverrideHelperCodepool::addCodePath() as $codepool)
+			foreach (JoomlaOverrideHelperCodepool::addCodePath() as $codepool)
 			{
 				$includePaths[] = $codepool.'/'.$option.'/controllers';
 			}
@@ -79,7 +81,7 @@ abstract class JControllerLegacy extends LIB_JControllerLegacyDefault
 			$task = $command;
 			
 			$includePaths[] = $basePath;
-			foreach (MVCOverrideHelperCodepool::addCodePath() as $codepool)
+			foreach (JoomlaOverrideHelperCodepool::addCodePath() as $codepool)
 			{
 				$includePaths[] = $codepool.'/'.$option;
 			}
@@ -148,7 +150,7 @@ abstract class JControllerLegacy extends LIB_JControllerLegacyDefault
 	protected function createView($name, $prefix = '', $type = '', $config = array())
 	{
 		$option = JFactory::getApplication()->input->get('option');
-		foreach (MVCOverrideHelperCodepool::addCodePath() as $codepool)
+		foreach (JoomlaOverrideHelperCodepool::addCodePath() as $codepool)
 		{
 			$this->addViewPath($codepool.'/'.$option.'/views');
 		}

@@ -1,5 +1,5 @@
 <?php
-abstract class MVCOverrideHelperOverride
+abstract class JoomlaOverrideHelperOverride
 {
 	/**
 	 * Default sufix of class overrides
@@ -88,6 +88,8 @@ abstract class MVCOverrideHelperOverride
 		{
 			$bufferContent = preg_replace(array('/JPATH_COMPONENT/','/JPATH_COMPONENT_SITE/','/JPATH_COMPONENT_ADMINISTRATOR/'),array('JPATH_SOURCE_COMPONENT','JPATH_SOURCE_COMPONENT_SITE','JPATH_SOURCE_COMPONENT_ADMINISTRATOR'),$bufferContent);
 		}
+		
+		//fix requires
 		
 		return $bufferContent;
 	}

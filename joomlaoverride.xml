@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="2.5" type="plugin" group="system" method="upgrade">
-	<name>plg_system_joomlaoverride</name>
+    <name>plg_system_joomlaoverride</name>
 	<author>Julio Pontes</author>
 	<creationDate>March 2012</creationDate>
 	<copyright>Copyright (C) 2005 - 2010 Open Source Matters. All rights reserved.</copyright>
@@ -23,7 +23,7 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
-				<field name="global_path" type="text" label="PLG_SYSTEM_JOOMLAOVERRIDE_FIELD_GLOBAL_PATH_LABEL" description="PLG_SYSTEM_JOOMLAOVERRIDE_FIELD_GLOBAL_PATH_DESC" default="templates/system/code"></field>
+				<field name="global_path" type="text" label="PLG_SYSTEM_JOOMLAOVERRIDE_FIELD_GLOBAL_PATH_LABEL" description="PLG_SYSTEM_JOOMLAOVERRIDE_FIELD_GLOBAL_PATH_DESC" default="override"></field>
 			
 				<field name="extendDefault" type="list" default="1" label="PLG_SYSTEM_JOOMLAOVERRIDE_FIELD_MAKE_EXTENDABLE_LABEL" description="PLG_SYSTEM_JOOMLAOVERRIDE_FIELD_MAKE_EXTENDABLE_DESC">
 					<option value="0">No</option>

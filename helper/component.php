@@ -1,4 +1,7 @@
 <?php
+jimport('joomla.filesystem.path');
+jimport('joomla.filesystem.folder');
+
 /**
  * Component Helper Manager
  *

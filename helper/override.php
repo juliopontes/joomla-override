@@ -16,14 +16,14 @@ jimport('joomla.filesystem.file');
 abstract class JoomlaOverrideHelperOverride
 {
 	/**
-	 * Default sufix of class overrides
+	 * Default suffix of class overrides
 	 * 
 	 * @var string
 	 */
 	const SUFIX = 'Default';
 
 	/**
-	 * Default presufix of class overrides
+	 * Default pre-suffix of class overrides
 	 * 
 	 * @var string
 	 */
@@ -70,7 +70,7 @@ abstract class JoomlaOverrideHelperOverride
 	}
 
 	/**
-	 * Read source file and replace class name by adding sufix/prefix
+	 * Read source file and replace class name by adding suffix/prefix
 	 * 
 	 * @param string $componentFile
 	 * @param string $sufix

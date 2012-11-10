@@ -39,7 +39,7 @@ class JoomlaOverrideHelperComponent
 	{
 		if (count(JoomlaOverrideHelperCodepool::addCodePath()) == 0) return;
 
-		//get files that can be overrided
+		//get files that can be overridden
 		$componentOverrideFiles = self::loadComponentFiles($option);
 		self::registerPaths($option);
 

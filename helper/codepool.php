@@ -32,7 +32,7 @@ class JoomlaOverrideHelperCodepool
 	{
 		$plugin_path = dirname(dirname(__FILE__));
 		
-		//exception for implement new features
+		//exception for implementing new features
 		$exceptionDatas = array(
 			array(
 				'option' => 'com_menus',

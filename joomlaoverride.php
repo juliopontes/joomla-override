@@ -41,7 +41,7 @@ class PlgSystemJoomlaOverride extends JPlugin
 		//code pools
 		$includePath = array();
 		//global extensions path
-		$customPath = JPath::clean($this->params->get('global_path','templates/system/code'));
+		$customPath = JPath::clean($this->params->get('global_path','override'));
 		$basePath = JPATH_SITE.DIRECTORY_SEPARATOR.$customPath;
 		//add administrator scope
 		if (JFactory::getApplication()->isAdmin())

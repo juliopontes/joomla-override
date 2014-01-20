@@ -66,6 +66,18 @@ class JoomlaOverrideHelperCodepool
 		{
 			$overrideClasses = array(
 				array(
+					'source_file' => JPATH_LIBRARIES.'/cms/component/helper.php',
+					'class_name' => 'JComponentHelper',
+					'jimport' => '',
+					'override_file' => $plugin_path.'/core/component/helper.php'
+				),
+				array(
+					'source_file' => JPATH_LIBRARIES.'/cms/module/helper.php',
+					'class_name' => 'JModuleHelper',
+					'jimport' => '',
+					'override_file' => $plugin_path.'/core/module/helper.php'
+				),
+				array(
 					'source_file' => JPATH_LIBRARIES.'/legacy/module/helper.php',
 					'class_name' => 'JModuleHelper',
 					'jimport' => '',
@@ -142,6 +154,7 @@ class JoomlaOverrideHelperCodepool
 	static private function overrideClass($sourcePath, $class, $jimport, $replacePath)
 	{
 		//override library class
+		if (!file_exists($sourcePath)) return;
 		JoomlaOverrideHelperOverride::load(JoomlaOverrideHelperOverride::createDefaultClass($sourcePath,'LIB_'));
 		
 		if (!empty($jimport)) jimport($jimport);

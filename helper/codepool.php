@@ -106,6 +106,12 @@ class JoomlaOverrideHelperCodepool
 		else {
 			$overrideClasses = array(
 				array(
+					'source_file' => JPATH_LIBRARIES.'/joomla/application/component/helper.php',
+					'class_name' => 'JComponentHelper',
+					'jimport' => '',
+					'override_file' => $plugin_path.'/core/component/helper.php'
+				),
+				array(
 					'source_file' => JPATH_LIBRARIES.'/joomla/application/module/helper.php',
 					'class_name' => 'JModuleHelper',
 					'jimport' => 'joomla.application.module.helper',

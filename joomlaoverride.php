@@ -17,6 +17,26 @@ require_once 'core/loader.php';
 require_once 'helper/codepool.php';
 require_once 'helper/component.php';
 
+JoomlaOverrideHelperCodepool::initialize();
+//template name
+$template = JFactory::getApplication()->getTemplate();
+
+//code pools
+$includePath = array();
+//global extensions path
+$customPath = JPath::clean($this->params->get('global_path','override'));
+$basePath = JPATH_SITE.DIRECTORY_SEPARATOR.$customPath;
+//add administrator scope
+if (JFactory::getApplication()->isAdmin())
+{
+	$basePath .= '/administrator';
+}
+
+$includePath[] = $basePath;
+//template code path
+$includePath[] = JPATH_THEMES.'/'.$template.'/code';
+JoomlaOverrideHelperCodepool::addCodePath($includePath);
+
 /**
  * Joomla! Override Plugin
  *
@@ -26,36 +46,6 @@ require_once 'helper/component.php';
  */
 class PlgSystemJoomlaOverride extends JPlugin
 {
-	/**
-	 * onAfterInitialise function.
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function onAfterInitialise()
-	{	
-		JoomlaOverrideHelperCodepool::initialize();
-		//template name
-		$template = JFactory::getApplication()->getTemplate();
-		
-		//code pools
-		$includePath = array();
-		//global extensions path
-		$customPath = JPath::clean($this->params->get('global_path','override'));
-		$basePath = JPATH_SITE.DIRECTORY_SEPARATOR.$customPath;
-		//add administrator scope
-		if (JFactory::getApplication()->isAdmin())
-		{
-			$basePath .= '/administrator';
-		}
-		
-		$includePath[] = $basePath;
-		//template code path
-		$includePath[] = JPATH_THEMES.'/'.$template.'/code';
-		
-		JoomlaOverrideHelperCodepool::addCodePath($includePath);
-	}
-	
 	/**
 	 * onAfterRoute function.
 	 * 

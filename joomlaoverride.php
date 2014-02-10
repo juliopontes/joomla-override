@@ -12,6 +12,13 @@ defined('_JEXEC') or die;
 
 jimport('joomla.plugin.plugin');
 
+require_once 'helper/override.php';
+require_once 'core/loader.php';
+require_once 'helper/codepool.php';
+require_once 'helper/component.php';
+		
+JoomlaOverrideHelperCodepool::initialize();
+
 /**
  * Joomla! Override Plugin
  *
@@ -21,16 +28,14 @@ jimport('joomla.plugin.plugin');
  */
 class PlgSystemJoomlaOverride extends JPlugin
 {
-	public function __construct($subject, $config)
+	/**
+	 * onAfterRoute function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function onAfterRoute()
 	{
-		parent::__construct($subject, $config);
-		
-		require_once 'helper/override.php';
-		require_once 'core/loader.php';
-		require_once 'helper/codepool.php';
-		require_once 'helper/component.php';
-		
-		JoomlaOverrideHelperCodepool::initialize();
 		//template name
 		$template = JFactory::getApplication()->getTemplate();
 		
@@ -49,16 +54,7 @@ class PlgSystemJoomlaOverride extends JPlugin
 		//template code path
 		$includePath[] = JPATH_THEMES.'/'.$template.'/code';
 		JoomlaOverrideHelperCodepool::addCodePath($includePath);
-	}
-	
-	/**
-	 * onAfterRoute function.
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function onAfterRoute()
-	{
+
 		$this->option = JFactory::getApplication()->input->get('option');
 		$this->extension = JFactory::getApplication()->input->get('extension');
 		

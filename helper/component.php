@@ -6,7 +6,7 @@
 * @copyright Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
 * @license GNU General Public License version 2 or later; see LICENSE.txt
 */
- 
+
 // no direct access
 defined('_JEXEC') or die;
 
@@ -22,7 +22,7 @@ class JoomlaOverrideHelperComponent
 {
 	/**
 	 * Exception data to prevent override classes
-	 * 
+	 *
 	 * @var array
 	 */
 	static private $_exception = array();
@@ -50,7 +50,7 @@ class JoomlaOverrideHelperComponent
 			define('JPATH_SOURCE_COMPONENT',JPATH_BASE.'/components/'.$option);
 			define('JPATH_SOURCE_COMPONENT_SITE',JPATH_SITE.'/components/'.$option);
 			define('JPATH_SOURCE_COMPONENT_ADMINISTRATOR',JPATH_ADMINISTRATOR.'/components/'.$option);
-			
+
 			foreach($componentOverrideFiles as $componentFile)
 			{
 				if($filePath = JPath::find(JoomlaOverrideHelperCodepool::addCodePath(),$componentFile))
@@ -62,7 +62,7 @@ class JoomlaOverrideHelperComponent
 						{
 							JoomlaOverrideHelperOverride::load(JoomlaOverrideHelperOverride::fixDefines(JoomlaOverrideHelperOverride::createDefaultClass(JPATH_BASE.'/components/'.$componentFile)));
 						}
-						
+
 						require_once $filePath;
 					}
 					else
@@ -84,7 +84,7 @@ class JoomlaOverrideHelperComponent
 	 * @param mixed $option
 	 * @return void
 	 */
-	private function loadComponentFiles($option)
+	static private function loadComponentFiles($option)
 	{
 		$JPATH_COMPONENT = JPATH_BASE.'/components/'.$option;
 		$files = array();
@@ -210,7 +210,7 @@ class JoomlaOverrideHelperComponent
 
 	/**
 	 * Check if exists and exception for specific component/application or if has a specific exceptions by types(models, controllers, views)
-	 * 
+	 *
 	 * @param string $option
 	 * @param string $key
 	 */
@@ -226,7 +226,7 @@ class JoomlaOverrideHelperComponent
 
 	/**
 	 * String register and exception data to override specific files
-	 * 
+	 *
 	 * @param string $option
 	 * @param string $application
 	 * @param array $data
